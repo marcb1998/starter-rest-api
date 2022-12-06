@@ -22,10 +22,17 @@ app.get('/test', (req, res) => {
   res.json({ msg: 'dit is een test'}).end()
 })
 
-app.get('/words', (req, async res => {
+app.get('/words', async (req, res) => {
   const snapshot = await db.collection('words').get();
-  res.json({ msg : 'all words'}).end()
-}))
+  const returnArray = new Array;
+  snapshot.forEach(doc => {
+    key = doc.id;
+    value = doc.data().word;
+    returnArray.push([key, value])
+    console.log(doc.id + '=>' + doc.data());
+  })
+  res.json({ returnArray }).end()
+})
 
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
