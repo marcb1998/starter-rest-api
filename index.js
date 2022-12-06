@@ -47,11 +47,11 @@ app.get('/test', (req, res) => {
 
 //get words from firebase
 app.get('/words', async (req, res) => {
-  // const snapshot = await db.collection('words').get();
-  // snapshot.forEach((doc) => {
-  // console.log(doc.id, '=>', doc.data());
-  // })
-  res.json({data: "ph"})
+  const snapshot = await db.collection('words').get();
+  snapshot.forEach((doc) => {
+    console.log(doc.id, '=>', doc.data());
+  })
+  res.json({snapshot}).end()
 })
 
 // Catch all handler for all other request.
