@@ -66,6 +66,11 @@ app.get('/test', (req, res) => {
   res.json({ msg: 'dit is een test'}).end()
 })
 
+app.get('/hallo', (req, res) => {
+  console.log('/test')
+  res.json({ msg: 'Hallo daar'}).end()
+})
+
 // Catch all handler for all other request.
 app.use('*', (req, res) => {
   res.json({ msg: 'no route handler found' }).end()
