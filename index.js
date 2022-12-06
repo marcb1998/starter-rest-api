@@ -4,17 +4,14 @@ const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestor
 const express = require('express')
 const app = express()
 
-const firebaseConfig = {
-  apiKey: process.env.apiKey,
-  authDomain: process.env.authDomain,
-  projectId: process.env.projectId,
-  storageBucket: process.env.storageBucket,
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId,
-  measurementId: process.env.measurementId
-};
+var admin = require("firebase-admin");
 
-initializeApp(firebaseConfig);
+var serviceAccount = require("path/to/serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
 const db = getFirestore();
 
 app.use(express.json())
