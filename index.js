@@ -1,7 +1,6 @@
 const express = require('express')
 const res = require('express/lib/response')
 const app = express()
-const tmpWordsJson = require('./words.json')
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -37,28 +36,26 @@ app.get('/words', async (req, res) => {
 
 app.get('/addJson', async (req, res) => {
   //load new words from json to array
-  const newWords = []
-  newWords.push(tmpWordsJson)
-
+  const newWords = require('./words.json'); //hard codex :s
+  
   //retrieve current words
   const snapshot = await db.collection('words').get();
-  const returnArray = new Array;
-  //loop over current word
+  let safeArray = new Array;
+  const oldWords = new Array;
+
+  //put all old words in array
   snapshot.forEach(doc => {
-    value = doc.data().word;
-    //add new words to db
-    newWords[0].forEach(word => {
-      //check of word is in current list
-      if(value != word){
-        console.log(word + "=>" + value)
-        const newDoc = db.collection('words').add({word})
-      }//else skip
-      else{
-        console.log("dupe")
-      }
-    })
+    oldWords.push(doc.data().word)
   })
-  res.json({msg: "upload compleet"}).end();
+
+  //compare array to new words and filter duplicate words
+  safeArray = newWords.filter(val => !oldWords.includes(val))
+
+  safeArray.forEach(newWord => {
+    //const newDoc = db.collection('words').add({newWord})
+  })
+
+  res.json({savedWords: safeArray}).end();
 })
 
 // Catch all handler for all other request.
