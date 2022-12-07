@@ -1,6 +1,7 @@
 const express = require('express')
 const res = require('express/lib/response')
 const app = express()
+const tmpWordsJson = require('./words.json')
 
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -32,6 +33,32 @@ app.get('/words', async (req, res) => {
     console.log(doc.id + '=>' + doc.data());
   })
   res.json({ returnArray }).end()
+})
+
+app.get('/addJson', async (req, res) => {
+  //load new words from json to array
+  const newWords = []
+  newWords.push(tmpWordsJson)
+
+  //retrieve current words
+  const snapshot = await db.collection('words').get();
+  const returnArray = new Array;
+  //loop over current word
+  snapshot.forEach(doc => {
+    value = doc.data().word;
+    //add new words to db
+    newWords[0].forEach(word => {
+      //check of word is in current list
+      if(value != word){
+        console.log(word + "=>" + value)
+        const newDoc = db.collection('words').add({word})
+      }//else skip
+      else{
+        console.log("dupe")
+      }
+    })
+  })
+  res.json({msg: "upload compleet"}).end();
 })
 
 // Catch all handler for all other request.
