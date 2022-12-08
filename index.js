@@ -52,10 +52,11 @@ app.get('/addJson', async (req, res) => {
   safeArray = newWords.filter(val => !oldWords.includes(val))
 
   safeArray.forEach(newWord => {
+    console.log(newWord)
     //const newDoc = db.collection('words').add({newWord})
   })
 
-  res.json({savedWords: safeArray}).end();
+  res.json({wordssaved: safeArray}).end();
 })
 
 // Catch all handler for all other request.
