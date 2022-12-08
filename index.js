@@ -22,19 +22,19 @@ app.get('/test', (req, res) => {
   res.json({ msg: 'dit is een test'}).end()
 })
 
-app.get('/words', async (req, res) => {
+app.get('/words/get', async (req, res) => {
   const snapshot = await db.collection('words').get();
   const returnArray = new Array;
   snapshot.forEach(doc => {
     key = doc.id;
     value = doc.data().word;
     returnArray.push([key, value])
-    console.log(doc.id + '=>' + doc.data());
+    console.log(doc.id + '=>' + doc.data().word);
   })
   res.json({ returnArray }).end()
 })
 
-app.get('/addJson', async (req, res) => {
+app.get('/words/add/json', async (req, res) => {
   //load new words from json to array
   const newWords = require('./words.json'); //hard codex :s
   
@@ -57,6 +57,25 @@ app.get('/addJson', async (req, res) => {
   })
 
   res.json({wordssaved: safeArray}).end();
+})
+
+app.get('/api/scores/get', async(req, res) => {
+  //firebase haal scores op
+  const snapshot = await db.collection('scores').get();
+
+  const result = new Array;
+
+  //filter results
+  snapshot.forEach(doc => {
+    let naam = doc.data().naam;
+    let score = doc.data().score;
+    let wpm = doc.data().wpm;
+
+    result.push([naam, score, wpm]);
+  })
+
+  //duw resultaat naar result'
+  res.json({result}).end();
 })
 
 // Catch all handler for all other request.
